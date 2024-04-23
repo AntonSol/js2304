@@ -1,4 +1,5 @@
-import { getGridSizeSettings, setGridSize } from "../../data.js";
+import { getGoogleCoords, getGridSizeSettings, setGridSize } from "../../data.js";
+import { Google } from "./Google/google.component.js";
 
 
 export function GameGrid() {
@@ -11,7 +12,10 @@ export function GameGrid() {
 
             for (let x = 0; x < gridSize.x; x++) {
                 const cell = document.createElement('td');
-                cell.append(`${x}, ${y}`);
+                if (x === getGoogleCoords().x 
+                && y === getGoogleCoords().y) {
+                    cell.append(Google());
+                }
                 row.append(cell);
             }
 
