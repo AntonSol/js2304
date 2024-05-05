@@ -1,140 +1,139 @@
 export const GAME_STATES = {
-    SETTINGS: 'settings',
-    IN_PROGRESS: 'in_progress',
-    WIN: 'win',
-    LOSE: 'lose'
-}
+  SETTINGS: "settings",
+  IN_PROGRESS: "in_progress",
+  WIN: "win",
+  LOSE: "lose",
+};
 
 const _data = {
-    gameState: GAME_STATES.SETTINGS,
-    settings: {
-        gridSize: {
-            x: 4,
-            y: 4
-        },
-        pointsToWin: 5,
-        pointsToLose: 5
+  gameState: GAME_STATES.SETTINGS,
+  settings: {
+    gridSize: {
+      x: 4,
+      y: 4,
     },
-    catch: 0,
-    miss: 0,
-    time: new Date(),
-    heroes: {
-        google: {
-            x: 0, 
-            y: 0
-        },
-        player1: {},
-        player2: {}
-    }
-}
+    pointsToWin: 5,
+    pointsToLose: 5,
+  },
+  catch: 0,
+  miss: 0,
+  time: new Date(),
+  heroes: {
+    google: {
+      x: 0,
+      y: 0,
+    },
+    player1: {},
+    player2: {},
+  },
+};
 
-let observer = () => {} 
+let observer = () => {};
 
 function changeGoogleCoords() {
-    // todo: using do while  prevent generating the same coordinates
-    _data.heroes.google.x = getRandomInt(_data.settings.gridSize.x - 1);
-    _data.heroes.google.y = getRandomInt(_data.settings.gridSize.y - 1);
+  // todo: using do while  prevent generating the same coordinates
+  _data.heroes.google.x = getRandomInt(_data.settings.gridSize.x - 1);
+  _data.heroes.google.y = getRandomInt(_data.settings.gridSize.y - 1);
 }
 
 /**
- * 
- * @param max любое целое положительное число, включая которое будет генерироваться значение от 0 (включая) до этого числа  
- * @returns 
+ *
+ * @param max любое целое положительное число, включая которое будет генерироваться значение от 0 (включая) до этого числа
+ * @returns
  */
 function getRandomInt(max) {
-    return Math.floor(Math.random() * (max + 1));
+  return Math.floor(Math.random() * (max + 1));
 }
 
 let jumpIntervalId;
 
 function stopGoogleJump() {
-    clearInterval(jumpIntervalId);
+  clearInterval(jumpIntervalId);
 }
 
 function runGoogleJump() {
-    jumpIntervalId = setInterval(() => {
-        changeGoogleCoords();
-        _data.miss++;
-        if (_data.miss === _data.settings.pointsToLose) {
-            stopGoogleJump();
-            _data.gameState = GAME_STATES.LOSE;
-        }
-        observer();
-    }, 3000)
+  jumpIntervalId = setInterval(() => {
+    changeGoogleCoords();
+    _data.miss++;
+    if (_data.miss === _data.settings.pointsToLose) {
+      stopGoogleJump();
+      _data.gameState = GAME_STATES.LOSE;
+    }
+    observer();
+  }, 1000);
 }
 
 // setter / mutation / command
 export function addEventListener(subscriber) {
-    observer = subscriber
+  observer = subscriber;
 }
 
 export function setGridSize(x, y) {
-    if (x < 1) throw new Error('Incorrect X grid size settings');
-    if (y < 1) throw new Error('Incorrect Y grid size settings');
+  if (x < 1) throw new Error("Incorrect X grid size settings");
+  if (y < 1) throw new Error("Incorrect Y grid size settings");
 
-    _data.settings.gridSize.x = x;
-    _data.settings.gridSize.y = y;
+  _data.settings.gridSize.x = x;
+  _data.settings.gridSize.y = y;
 }
 
 export function start() {
-    _data.gameState = GAME_STATES.IN_PROGRESS;
-    runGoogleJump();
-    observer();
+  _data.gameState = GAME_STATES.IN_PROGRESS;
+  runGoogleJump();
+  observer();
 }
 
 export function playAgain() {
-    _data.miss = 0;
-    _data.catch = 0;
-    _data.gameState = GAME_STATES.SETTINGS;
-    observer();
+  _data.miss = 0;
+  _data.catch = 0;
+  _data.gameState = GAME_STATES.SETTINGS;
+  observer();
 }
 
 export function catchGoogle() {
-    stopGoogleJump();
+  stopGoogleJump();
 
-    if (_data.catch === _data.settings.pointsToWin) {
-        return;
-    }
+  if (_data.catch === _data.settings.pointsToWin) {
+    return;
+  }
 
-    _data.catch++;
+  _data.catch++;
 
-    if (_data.catch === _data.settings.pointsToWin) {
-        _data.gameState = GAME_STATES.WIN;
-    } else {
-        changeGoogleCoords();
-        runGoogleJump();
-    }
+  if (_data.catch === _data.settings.pointsToWin) {
+    _data.gameState = GAME_STATES.WIN;
+  } else {
+    changeGoogleCoords();
+    runGoogleJump();
+  }
 
-    observer();
+  observer();
 }
-
 
 // getter/selector/query/adapter
 
 /**
- * 
+ *
  * @returns кол-во баллов, заработанных пользователем
  */
 export function getCatchCount() {
-    return _data.catch;
+  return _data.catch;
 }
 
 export function getMissCount() {
-    return _data.miss;
+  return _data.miss;
 }
 
 export function getGoogleCoords() {
-    return {
-        ..._data.heroes.google
-    };
+  return {
+    ..._data.heroes.google,
+  };
 }
 
 export function getGridSizeSettings() {
-    return {
-        ..._data.settings.gridSize
-    }
+  return {
+    ..._data.settings.gridSize,
+  };
 }
 
 export function getGameState() {
-    return _data.gameState;
+  return _data.gameState;
 }
