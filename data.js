@@ -23,8 +23,8 @@ const _data = {
       x: 0,
       y: 0,
     },
-    player1: {},
-    player2: {},
+    player1: { x: 1, y: 1 },
+    player2: { x: 2, y: 2 },
   },
 };
 
@@ -89,7 +89,7 @@ export function playAgain() {
   observer();
 }
 
-export function catchGoogle() {
+function catchGoogle() {
   stopGoogleJump();
 
   if (_data.catch === _data.settings.pointsToWin) {
@@ -125,6 +125,16 @@ export function getMissCount() {
 export function getGoogleCoords() {
   return {
     ..._data.heroes.google,
+  };
+}
+export function getPlayer1Coords() {
+  return {
+    ..._data.heroes.player1,
+  };
+}
+export function getPlayer2Coords() {
+  return {
+    ..._data.heroes.player2,
   };
 }
 
